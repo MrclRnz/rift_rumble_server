@@ -6,7 +6,6 @@ use warp::{ws::Message, Filter, Rejection};
 
 mod handler;
 mod ws;
-mod lcu_ws;
 
 type Result<T> = std::result::Result<T, Rejection>;
 type Clients = Arc<RwLock<HashMap<String, Client>>>;
@@ -20,12 +19,6 @@ pub struct Client {
 
 #[tokio::main]
 async fn main() {
-    
-    tokio::spawn(
-    lcu_ws::get_lcu_websocket_connection()
-    ).await;
-    
-    /* 
     let clients: Clients = Arc::new(RwLock::new(HashMap::new()));
 
     let health_route = warp::path!("health").and_then(handler::health_handler);
@@ -60,7 +53,6 @@ async fn main() {
         .with(warp::cors().allow_any_origin());
 
     warp::serve(routes).run(([127, 0, 0, 1], 8000)).await;
-    */
 }
 
 fn with_clients(clients: Clients) -> impl Filter<Extract = (Clients,), Error = Infallible> + Clone {
